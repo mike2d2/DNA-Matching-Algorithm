@@ -1,5 +1,6 @@
 import sys
- 
+
+sys.setrecursionlimit(10**6)
 inputFilename = 'input.txt' #sys.argv[1]
 #outputFilename = sys.argv[2]
 
