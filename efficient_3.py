@@ -36,7 +36,7 @@ delta = 30
 alphas = [[0,110,48,94],[110, 0, 118, 48],[48, 118, 0, 110],[94, 48,110, 0]]
 
 # s1 and s2 indexes point to the index of the last letter in string
-def findMinCost():
+def findMinCost(s1, s2):
     # if (s1_index, s2_index) in memo:
     #     return memo[(s1_index, s2_index)][0]
     # if s1_index == -1:
