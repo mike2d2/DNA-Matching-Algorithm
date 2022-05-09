@@ -1,4 +1,9 @@
 import sys
+import math
+
+#from resource import *
+import time
+import psutil
 
 sys.setrecursionlimit(10**6)
 inputFilename = 'input.txt' #sys.argv[1]
@@ -137,14 +142,36 @@ def calculate_final_string(memo_array):
     return (final_s1, final_s2)
 
 
-def main():
 
+
+
+def process_memory():
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    memory_consumed = int(memory_info.rss/1024)
+    return memory_consumed
+
+
+def time_wrapper():
+    start_time = time.time()
+    call_algorithm()
+    end_time = time.time()
+    time_taken = (end_time - start_time)*1000
+    return time_taken
+
+def call_algorithm():
     memo_array = findMinCost()
     print(memo_array[len(s2)][len(s1)])
 
     final_strings = calculate_final_string(memo_array)
     print(final_strings[0])
     print(final_strings[1])
+
+def main():
+    # a, b = findMinCost(s1,s2)
+    # print(b[len(s2)])
+    print(time_wrapper())
+    print(process_memory())
 
 if __name__ == '__main__':
     main()

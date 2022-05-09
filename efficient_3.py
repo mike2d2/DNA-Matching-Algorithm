@@ -1,15 +1,21 @@
 import sys
 import math
 
+#from resource import *
+import time
+import psutil
+
 sys.setrecursionlimit(10**8)
-inputFilename = 'input.txt' #sys.argv[1]
+#inputFilename = 'input.txt' #sys.argv[1]
 #outputFilename = sys.argv[2]
 
-inputFile = open(inputFilename, 'r')
-lines = inputFile.readlines()
+#inputFile = open(inputFilename, 'r')
+#lines = inputFile.readlines()
 
 s1 = ''
 s2 = ''
+output_string_1 = ""
+output_string_2 = ""
 
 memo_array = [[]]
 
@@ -20,18 +26,18 @@ def insertCopyAt(linenum, string):
 
 # checks if line is number and inserts copy there if it is
 # otherwise populates s1 and s2 strings
-for line in lines:
-    line = line.strip()
-    if line.isdigit():
-        if s2 == '':
-            s1 = insertCopyAt(line, s1)
-        else:
-            s2 = insertCopyAt(line, s2)
-    else:
-        if s1 == '':
-            s1 = line
-        else:
-            s2 = line
+# for line in lines:
+#     line = line.strip()
+#     if line.isdigit():
+#         if s2 == '':
+#             s1 = insertCopyAt(line, s1)
+#         else:
+#             s2 = insertCopyAt(line, s2)
+#     else:
+#         if s1 == '':
+#             s1 = line
+#         else:
+#             s2 = line
 
 delta = 30
 alphas = [[0,110,48,94],[110, 0, 118, 48],[48, 118, 0, 110],[94, 48,110, 0]]
@@ -118,25 +124,63 @@ def calculate_final_string(memo_array, x, y):
     return (final_s1, final_s2)
 
 def find_min_cost_recursive(x, y):
-    if len(x) < 2 or len(y) < 2:
-
-        if len(x) < len(y):
-            memo_list1, memo_list2 = findMinCost(x,y)
-        else:
-            memo_list1, memo_list2 = findMinCost(y,x)
-        
-        memo_array = [[0]*(2) for i in range(len(memo_list2))]
-
-        for i in range(len(memo_list2)):
-            memo_array[i][0] = memo_list1[i]
-            memo_array[i][1] = memo_list2[i]
-
-        if len(x) < len(y):
-            (x_string,y_string) = calculate_final_string(memo_array, x, y)
-            return (x_string, y_string, memo_array[len(y)][len(x)])
-        else:
-            (y_string,x_string) = calculate_final_string(memo_array, y, x)
-            return (x_string, y_string, memo_array[len(x)][len(y)])
+    global output_string_1
+    global output_string_2
+    if len(x) == 0 and len(y) == 0:
+        #return (x, y, 0)
+        output_string_1 += x
+        output_string_2 += y
+        return
+    elif len(x) == 1 and len(y) > 1:
+        x_str = ''
+        total_cost = 0
+        (min_match_cost, index) = find_min_match(x,y)
+        for i in range(len(y)):
+            if i == index:
+                x_str += x
+            else:
+                x_str = x_str + '_'
+                total_cost += delta
+        #return (x_str, y, total_cost + min_match_cost)
+        output_string_1 += x_str
+        output_string_2 += y
+        return
+    elif len(y) == 1 and len(x) > 1:
+        y_str = ''
+        total_cost = 0
+        (min_match_cost, index) = find_min_match(y,x)
+        for i in range(len(x)):
+            if i == index:
+                y_str += y
+            else:
+                y_str = y_str + '_'
+                total_cost += delta
+        #return (x, y_str, total_cost + min_match_cost)
+        output_string_1 += x
+        output_string_2 += y_str
+        return
+    elif len(x) == 1 and len(y) == 1:
+        cost = calculateMatchCost(x,y)
+        # return (x,y,cost)
+        output_string_1 += x
+        output_string_2 += y
+        return
+    elif len(x) == 0:
+        x_str = ''
+        for i in range(len(y)):
+            x_str = x_str + '_'
+        #return (x_str, y, (delta * len(y)))
+        output_string_1 += x_str
+        output_string_2 += y
+        return
+    elif len(y) == 0:
+        y_str = ''
+        for i in range(len(x)):
+            y_str = y_str + '_'
+        #return (x, y_str, (delta * len(x)))
+        output_string_1 += x
+        output_string_2 += y_str
+        return
         
     
     x_l, x_r = x[:math.floor(len(x)/2)], x[math.floor(len(x)/2):]
@@ -155,11 +199,11 @@ def find_min_cost_recursive(x, y):
             index_opt = i
 
     y_l, y_r = y[:index_opt], y[index_opt:]
-        
-    left_tuple = find_min_cost_recursive(x_l, y_l)
-    right_tuple = find_min_cost_recursive(x_r, y_r)
-
-    return (left_tuple[0] + right_tuple[0], left_tuple[1] + right_tuple[1], left_tuple[2] + right_tuple[2])
+    
+    find_min_cost_recursive(x_l, y_l)
+    find_min_cost_recursive(x_r, y_r)
+    return
+    #return (left_tuple[0] + right_tuple[0], left_tuple[1] + right_tuple[1], left_tuple[2] + right_tuple[2])
 
 
 
@@ -176,8 +220,8 @@ def chooseMin(first, second, third):
     return chosen
 
 def calculateMatchCost(x, y):
-    if len(x) != 1 or len(y) != 1:
-        asdfl = 0
+    # if len(x) != 1 or len(y) != 1:
+    #     asdfl = 0
 
     char1 = x
     char2 = y
@@ -210,15 +254,90 @@ def calc_cost(o1, o2):
 
     return total_cost 
 
+def process_memory():
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    memory_consumed = int(memory_info.rss/1024)
+    return memory_consumed
+
+
+def time_wrapper():
+    start_time = time.time()
+    call_algorithm()
+    end_time = time.time()
+    time_taken = (end_time - start_time)*1000
+    return time_taken
+
+def call_algorithm():
+    create_data()
+    find_min_cost_recursive(s1, s2)
+    #print(output_string_1)
+    #print(output_string_2)
+    cost = calc_cost(output_string_1, output_string_2)
+    lines = [str(cost), output_string_1, output_string_2]
+    with open("output.txt","w") as f:
+        for i in range(len(lines)):
+                f.writelines(lines[i])
+                f.writelines("\n")
+
+
+def create_data():
+    global output_string_1
+    global output_string_2
+    global s1
+    global s2
+    #inputs = ["in1.txt","in2.txt","in3.txt","in4.txt","in5.txt","in6.txt","in7.txt","in8.txt","in9.txt","in10.txt","in11.txt","in12.txt","in13.txt","in14.txt","in15.txt"]
+    inputs = ["input.txt"]
+    arr = []
+    for i in inputs:
+        output_string_1 = ''
+        output_string_2 = ''
+        s1 = ''
+        s2 = ''
+        inputFilename = "input.txt"
+        #outputFilename = sys.argv[2]
+
+        inputFile = open(inputFilename, 'r')
+        lines = inputFile.readlines()
+
+        # checks if line is number and inserts copy there if it is
+        # otherwise populates s1 and s2 strings
+        for line in lines:
+            line = line.strip()
+            if line.isdigit():
+                if s2 == '':
+                    s1 = insertCopyAt(line, s1)
+                else:
+                    s2 = insertCopyAt(line, s2)
+            else:
+                if s1 == '':
+                    s1 = line
+                else:
+                    s2 = line
+
+        # (time, cost) = time_wrapper()
+        # memory = process_memory()
+        # mn = len(s1) + len(s2)
+        # row = [i, mn, time, cost, memory]
+        # arr.append(row)
+        # # print(row)
+        # lines = [cost, output_string_1, output_string_2]
+
+
 def main():
-    a, b = findMinCost(s1,s2)
-    print(b[len(s2)])
-    
-    # tuple = find_min_cost_recursive(s1, s2)
-    # print(tuple[0])
-    # print(tuple[1])
-    # print(tuple[2])
-    # print(calc_cost(tuple[0], tuple[1]))
+    # a, b = findMinCost(s1,s2)
+    # print(b[len(s2)])
+    time = time_wrapper()
+    memory = process_memory()
+
+    with open("output.txt","a") as f:
+        
+        f.write(str(time))
+        f.write("\n")
+        f.write(str(memory))
+        
+
+    #create_data()
 
 if __name__ == '__main__':
     main()
