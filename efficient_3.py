@@ -12,6 +12,9 @@ sys.setrecursionlimit(10**8)
 #inputFile = open(inputFilename, 'r')
 #lines = inputFile.readlines()
 
+inputFilename = sys.argv[1]
+outputFilename = sys.argv[2]
+
 s1 = ''
 s2 = ''
 output_string_1 = ""
@@ -275,7 +278,7 @@ def call_algorithm():
     #print(output_string_2)
     cost = calc_cost(output_string_1, output_string_2)
     lines = [str(cost), output_string_1, output_string_2]
-    with open("output.txt","w") as f:
+    with open(outputFilename,"w") as f:
         for i in range(len(lines)):
                 f.writelines(lines[i])
                 f.writelines("\n")
@@ -294,8 +297,8 @@ def create_data():
         output_string_2 = ''
         s1 = ''
         s2 = ''
-        inputFilename = "input.txt"
-        #outputFilename = sys.argv[2]
+        # inputFilename = sys.argv[1]
+        # outputFilename = sys.argv[2]
 
         inputFile = open(inputFilename, 'r')
         lines = inputFile.readlines()
@@ -330,7 +333,7 @@ def main():
     time = time_wrapper()
     memory = process_memory()
 
-    with open("output.txt","a") as f:
+    with open(outputFilename,"a") as f:
         
         f.write(str(time))
         f.write("\n")

@@ -6,8 +6,8 @@ import time
 import psutil
 
 sys.setrecursionlimit(10**6)
-inputFilename = 'input.txt' #sys.argv[1]
-#outputFilename = sys.argv[2]
+inputFilename = sys.argv[1]
+outputFilename = sys.argv[2]
 
 inputFile = open(inputFilename, 'r')
 lines = inputFile.readlines()
@@ -22,20 +22,20 @@ def insertCopyAt(linenum, string):
     newString = string[ : int(linenum)] + string + string[int(linenum) : ]
     return newString
 
-# checks if line is number and inserts copy there if it is
-# otherwise populates s1 and s2 strings
-for line in lines:
-    line = line.strip()
-    if line.isdigit():
-        if s2 == '':
-            s1 = insertCopyAt(line, s1)
-        else:
-            s2 = insertCopyAt(line, s2)
-    else:
-        if s1 == '':
-            s1 = line
-        else:
-            s2 = line
+# # checks if line is number and inserts copy there if it is
+# # otherwise populates s1 and s2 strings
+# for line in lines:
+#     line = line.strip()
+#     if line.isdigit():
+#         if s2 == '':
+#             s1 = insertCopyAt(line, s1)
+#         else:
+#             s2 = insertCopyAt(line, s2)
+#     else:
+#         if s1 == '':
+#             s1 = line
+#         else:
+#             s2 = line
 
 delta = 30
 alphas = [[0,110,48,94],[110, 0, 118, 48],[48, 118, 0, 110],[94, 48,110, 0]]
@@ -159,19 +159,50 @@ def time_wrapper():
     time_taken = (end_time - start_time)*1000
     return time_taken
 
+def setup_data():
+    global s1
+    global s2
+    # checks if line is number and inserts copy there if it is
+    # otherwise populates s1 and s2 strings
+    for line in lines:
+        line = line.strip()
+        if line.isdigit():
+            if s2 == '':
+                s1 = insertCopyAt(line, s1)
+            else:
+                s2 = insertCopyAt(line, s2)
+        else:
+            if s1 == '':
+                s1 = line
+            else:
+                s2 = line
+
+
 def call_algorithm():
+    setup_data()
     memo_array = findMinCost()
-    print(memo_array[len(s2)][len(s1)])
+    cost = memo_array[len(s2)][len(s1)]
+    print(cost)
 
     final_strings = calculate_final_string(memo_array)
     print(final_strings[0])
     print(final_strings[1])
 
+    lines = [str(cost), final_strings[0], final_strings[1]]
+    with open(outputFilename,"w") as f:
+        for i in range(len(lines)):
+                f.writelines(lines[i])
+                f.writelines("\n")
+
 def main():
     # a, b = findMinCost(s1,s2)
     # print(b[len(s2)])
-    print(time_wrapper())
-    print(process_memory())
+    time = time_wrapper()
+    memory = process_memory()
+    with open(outputFilename,"a") as f:
+        f.write(str(time))
+        f.write("\n")
+        f.write(str(memory))
 
 if __name__ == '__main__':
     main()
