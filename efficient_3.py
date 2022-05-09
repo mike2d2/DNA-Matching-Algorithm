@@ -12,8 +12,8 @@ sys.setrecursionlimit(10**8)
 #inputFile = open(inputFilename, 'r')
 #lines = inputFile.readlines()
 
-inputFilename = sys.argv[1]
-outputFilename = sys.argv[2]
+inputFilename = "datapoints/in14.txt"#sys.argv[1]
+outputFilename = "output.txt" #sys.argv[2]
 
 s1 = ''
 s2 = ''
@@ -273,6 +273,9 @@ def time_wrapper():
 
 def call_algorithm():
     create_data()
+    l1, l2 = findMinCost(s1, s2)
+    cost = l1[len(l2)-1]
+    print(str(cost))
     find_min_cost_recursive(s1, s2)
     #print(output_string_1)
     #print(output_string_2)
@@ -328,6 +331,8 @@ def create_data():
 
 
 def main():
+    
+
     # a, b = findMinCost(s1,s2)
     # print(b[len(s2)])
     time = time_wrapper()
