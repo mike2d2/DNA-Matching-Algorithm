@@ -118,25 +118,43 @@ def calculate_final_string(memo_array, x, y):
     return (final_s1, final_s2)
 
 def find_min_cost_recursive(x, y):
-    if len(x) < 2 or len(y) < 2:
-
-        if len(x) < len(y):
-            memo_list1, memo_list2 = findMinCost(x,y)
-        else:
-            memo_list1, memo_list2 = findMinCost(y,x)
-        
-        memo_array = [[0]*(2) for i in range(len(memo_list2))]
-
-        for i in range(len(memo_list2)):
-            memo_array[i][0] = memo_list1[i]
-            memo_array[i][1] = memo_list2[i]
-
-        if len(x) < len(y):
-            (x_string,y_string) = calculate_final_string(memo_array, x, y)
-            return (x_string, y_string, memo_array[len(y)][len(x)])
-        else:
-            (y_string,x_string) = calculate_final_string(memo_array, y, x)
-            return (x_string, y_string, memo_array[len(x)][len(y)])
+    if len(x) == 0 and len(y) == 0:
+        return (x, y, 0)
+    elif len(x) == 1 and len(y) > 1:
+        x_str = ''
+        total_cost = 0
+        (min_match_cost, index) = find_min_match(x,y)
+        for i in range(len(y)):
+            if i == index:
+                x_str += x
+            else:
+                x_str = x_str + '_'
+                total_cost += delta
+        return (x_str, y, total_cost + min_match_cost)
+    elif len(y) == 1 and len(x) > 1:
+        y_str = ''
+        total_cost = 0
+        (min_match_cost, index) = find_min_match(y,x)
+        for i in range(len(x)):
+            if i == index:
+                y_str += y
+            else:
+                y_str = y_str + '_'
+                total_cost += delta
+        return (x, y_str, total_cost + min_match_cost)
+    elif len(x) == 1 and len(y) == 1:
+        cost = calculateMatchCost(x,y)
+        return (x,y,cost)
+    elif len(x) == 0:
+        x_str = ''
+        for i in range(len(y)):
+            x_str = x_str + '_'
+        return (x_str, y, (delta * len(y)))
+    elif len(y) == 0:
+        y_str = ''
+        for i in range(len(x)):
+            y_str = y_str + '_'
+        return (x, y_str, (delta * len(x)))
         
     
     x_l, x_r = x[:math.floor(len(x)/2)], x[math.floor(len(x)/2):]
@@ -211,14 +229,14 @@ def calc_cost(o1, o2):
     return total_cost 
 
 def main():
-    a, b = findMinCost(s1,s2)
-    print(b[len(s2)])
+    # a, b = findMinCost(s1,s2)
+    # print(b[len(s2)])
     
-    # tuple = find_min_cost_recursive(s1, s2)
-    # print(tuple[0])
-    # print(tuple[1])
-    # print(tuple[2])
-    # print(calc_cost(tuple[0], tuple[1]))
+    tuple = find_min_cost_recursive(s1, s2)
+    print(tuple[0])
+    print(tuple[1])
+    print(tuple[2])
+    print(calc_cost(tuple[0], tuple[1]))
 
 if __name__ == '__main__':
     main()
