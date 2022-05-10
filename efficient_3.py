@@ -256,8 +256,6 @@ class Basic:
         self.basic_s2 = y
         basic_memo_array = self.basic_findMinCost()
         cost = basic_memo_array[len(self.basic_s2)][len(self.basic_s1)]
-        # print(cost)
-        # print("line368")
 
         fs1, fs2 = self.basic_calculate_final_string(basic_memo_array)
 
@@ -333,7 +331,6 @@ class Basic:
             elif s2_index == 0:
                 chose = 2
             else:
-                #chose = self.basic_chooseMin(basic_memo_array[s2_index-1][s1_index-1], basic_memo_array[s2_index-1][s1_index], basic_memo_array[s2_index][s1_index-1])
                 feasible_match = math.inf
                 matchCost = self.basic_calculateMatchCost(s1_index, s2_index)
                 totCost = basic_memo_array[s2_index-1][s1_index-1] + matchCost
