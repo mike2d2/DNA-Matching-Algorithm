@@ -6,14 +6,9 @@ import time
 import psutil
 
 sys.setrecursionlimit(10**8)
-#inputFilename = 'input.txt' #sys.argv[1]
-#outputFilename = sys.argv[2]
 
-#inputFile = open(inputFilename, 'r')
-#lines = inputFile.readlines()
-
-inputFilename = "input.txt" #sys.argv[1]
-outputFilename = "output.txt" #sys.argv[2]
+inputFilename = sys.argv[1]
+outputFilename = sys.argv[2]
 
 s1 = ''
 s2 = ''
@@ -27,21 +22,6 @@ def insertCopyAt(linenum, string):
     newString = string[ : int(linenum)] + string + string[int(linenum) : ]
     return newString
 
-# checks if line is number and inserts copy there if it is
-# otherwise populates s1 and s2 strings
-# for line in lines:
-#     line = line.strip()
-#     if line.isdigit():
-#         if s2 == '':
-#             s1 = insertCopyAt(line, s1)
-#         else:
-#             s2 = insertCopyAt(line, s2)
-#     else:
-#         if s1 == '':
-#             s1 = line
-#         else:
-#             s2 = line
-
 delta = 30
 alphas = [[0,110,48,94],[110, 0, 118, 48],[48, 118, 0, 110],[94, 48,110, 0]]
 
@@ -51,15 +31,11 @@ def findMinCost(x, y):
     memo_list1 = []
     memo_list2 = []
     memo_list_final = []
-    
-
 
     for i in range(len(y)+1):
         memo_list1.append(delta * i)
         memo_list2.append(0)
         memo_list_final.append(0)
-        
-
     
     for s1_index in range(1, len(x)+1):
 
@@ -76,7 +52,6 @@ def findMinCost(x, y):
         memo_list_final = [i for i in memo_list1]
         memo_list1 = [i for i in memo_list2]
 
-    #memo[(s1_index, s2_index)] = chosenMin
     return (memo_list_final, memo_list2)
 
 def find_min_match(x,y):
@@ -96,7 +71,6 @@ def calculate_final_string(memo_array, x, y):
     final_s2 = ''
 
     while s1_index > 0 or s2_index > 0:
-        #opt = memo_array[s2_index][s2_index]
         if s1_index == 0:
             chose = 1
         elif s2_index == 0:
@@ -119,11 +93,6 @@ def calculate_final_string(memo_array, x, y):
             final_s1 = x[s1_index-1] + final_s1
             s1_index -= 1
 
-    # if len(final_s1) > len(final_s2):
-    #     final_s1 = final_s1[:-1]
-    # else:
-    #     final_s2 = final_s2[:-1]
-
     return (final_s1, final_s2)
 
 
@@ -133,71 +102,11 @@ def find_min_cost_recursive(x, y):
     global output_string_2
 
     if len(x) <= 1 or len(y) <= 1:
-        #x_str, y_str = basic_alg(x,y)
         basic = Basic('','')
         x_str, y_str = basic.basic_alg(x, y)
         output_string_1 += x_str
         output_string_2 += y_str
         return
-    
-
-
-    # if len(x) == 0 and len(y) == 0:
-    #     #return (x, y, 0)
-    #     output_string_1 += x
-    #     output_string_2 += y
-    #     return
-    # elif len(x) == 1 and len(y) > 1:
-    #     x_str = ''
-    #     total_cost = 0
-    #     (min_match_cost, index) = find_min_match(x,y)
-    #     for i in range(len(y)):
-    #         if i == index:
-    #             x_str += x
-    #         else:
-    #             x_str = x_str + '_'
-    #             total_cost += delta
-    #     #return (x_str, y, total_cost + min_match_cost)
-    #     output_string_1 += x_str
-    #     output_string_2 += y
-    #     return
-    # elif len(y) == 1 and len(x) > 1:
-    #     y_str = ''
-    #     total_cost = 0
-    #     (min_match_cost, index) = find_min_match(y,x)
-    #     for i in range(len(x)):
-    #         if i == index:
-    #             y_str += y
-    #         else:
-    #             y_str = y_str + '_'
-    #             total_cost += delta
-    #     #return (x, y_str, total_cost + min_match_cost)
-    #     output_string_1 += x
-    #     output_string_2 += y_str
-    #     return
-    # elif len(x) == 1 and len(y) == 1:
-    #     cost = calculateMatchCost(x,y)
-    #     # return (x,y,cost)
-    #     output_string_1 += x
-    #     output_string_2 += y
-    #     return
-    # elif len(x) == 0:
-    #     x_str = ''
-    #     for i in range(len(y)):
-    #         x_str = x_str + '_'
-    #     #return (x_str, y, (delta * len(y)))
-    #     output_string_1 += x_str
-    #     output_string_2 += y
-    #     return
-    # elif len(y) == 0:
-    #     y_str = ''
-    #     for i in range(len(x)):
-    #         y_str = y_str + '_'
-    #     #return (x, y_str, (delta * len(x)))
-    #     output_string_1 += x
-    #     output_string_2 += y_str
-    #     return
-        
     
     x_l, x_r = x[:math.floor(len(x)/2)], x[math.floor(len(x)/2):]
 
@@ -219,8 +128,6 @@ def find_min_cost_recursive(x, y):
     find_min_cost_recursive(x_l, y_l)
     find_min_cost_recursive(x_r, y_r)
     return
-    #return (left_tuple[0] + right_tuple[0], left_tuple[1] + right_tuple[1], left_tuple[2] + right_tuple[2])
-
 
 
 def chooseMin(first, second, third):
@@ -236,8 +143,6 @@ def chooseMin(first, second, third):
     return chosen
 
 def calculateMatchCost(x, y):
-    # if len(x) != 1 or len(y) != 1:
-    #     asdfl = 0
 
     char1 = x
     char2 = y
@@ -286,12 +191,7 @@ def time_wrapper():
 
 def call_algorithm():
     create_data()
-    # l1, l2 = findMinCost(s1, s2)
-    # cost = l2[len(l2)-1]
-    # print(str(cost))
     find_min_cost_recursive(s1, s2)
-    #print(output_string_1)
-    #print(output_string_2)
     cost = calc_cost(output_string_1, output_string_2)
     lines = [str(cost), output_string_1, output_string_2]
     with open(outputFilename,"w") as f:
@@ -305,7 +205,6 @@ def create_data():
     global output_string_2
     global s1
     global s2
-    #inputs = ["in1.txt","in2.txt","in3.txt","in4.txt","in5.txt","in6.txt","in7.txt","in8.txt","in9.txt","in10.txt","in11.txt","in12.txt","in13.txt","in14.txt","in15.txt"]
     inputs = ["input.txt"]
     arr = []
     for i in inputs:
@@ -313,8 +212,6 @@ def create_data():
         output_string_2 = ''
         s1 = ''
         s2 = ''
-        # inputFilename = sys.argv[1]
-        # outputFilename = sys.argv[2]
 
         inputFile = open(inputFilename, 'r')
         lines = inputFile.readlines()
@@ -334,14 +231,6 @@ def create_data():
                 else:
                     s2 = line
 
-        # (time, cost) = time_wrapper()
-        # memory = process_memory()
-        # mn = len(s1) + len(s2)
-        # row = [i, mn, time, cost, memory]
-        # arr.append(row)
-        # # print(row)
-        # lines = [cost, output_string_1, output_string_2]
-
 
 def main():
     # a, b = findMinCost(s1,s2)
@@ -354,12 +243,9 @@ def main():
         f.write(str(time))
         f.write("\n")
         f.write(str(memory))
-        
-
-    #create_data()
 
 ################################
-# THIS IS BASIC ALG CODE
+# THIS IS BASIC ALG CODE USED IN BASE CASE
 class Basic:
     def __init__(self, basic_s1, basic_s2):
         self.basic_s1 = basic_s1
@@ -370,8 +256,8 @@ class Basic:
         self.basic_s2 = y
         basic_memo_array = self.basic_findMinCost()
         cost = basic_memo_array[len(self.basic_s2)][len(self.basic_s1)]
-        print(cost)
-        print("line368")
+        # print(cost)
+        # print("line368")
 
         fs1, fs2 = self.basic_calculate_final_string(basic_memo_array)
 
@@ -379,12 +265,6 @@ class Basic:
 
     # s1 and s2 indexes point to the index of the last letter in string
     def basic_findMinCost(self):
-        # if (s1_index, s2_index) in memo:
-        #     return memo[(s1_index, s2_index)][0]
-        # if s1_index == -1:
-        #     return delta * (s2_index+1)
-        # elif s2_index == -1:
-        #     return delta * (s1_index+1)
 
         basic_memo_array = [[0]*(len(self.basic_s1)+1) for i in range((len(self.basic_s2)+1))]
 
@@ -404,7 +284,6 @@ class Basic:
                     delta + basic_memo_array[s2_index-1][s1_index], # add gap to s2
                     delta + basic_memo_array[s2_index][s1_index-1]) # add gap to s1
 
-        #memo[(s1_index, s2_index)] = chosenMin
         return basic_memo_array
 
     def basic_chooseMin(self, first, second, third):
@@ -477,13 +356,7 @@ class Basic:
                 final_s1 = self.basic_s1[s1_index-1] + final_s1
                 s1_index -= 1
 
-        # if len(final_s1) > len(final_s2):
-        #     final_s1 = final_s1[:-1]
-        # else:
-        #     final_s2 = final_s2[:-1]
-
         return (final_s1, final_s2)
 
 if __name__ == '__main__':
     main()
-    #basic_alg("ACTG", "A")

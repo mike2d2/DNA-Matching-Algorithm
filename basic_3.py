@@ -1,13 +1,12 @@
 import sys
 import math
 
-#from resource import *
 import time
 import psutil
 
 sys.setrecursionlimit(10**6)
-inputFilename = "input.txt"#sys.argv[1]
-outputFilename = "output.txt"#sys.argv[2]
+inputFilename = sys.argv[1]
+outputFilename = sys.argv[2]
 
 inputFile = open(inputFilename, 'r')
 lines = inputFile.readlines()
@@ -22,32 +21,11 @@ def insertCopyAt(linenum, string):
     newString = string[ : int(linenum)] + string + string[int(linenum) : ]
     return newString
 
-# # checks if line is number and inserts copy there if it is
-# # otherwise populates s1 and s2 strings
-# for line in lines:
-#     line = line.strip()
-#     if line.isdigit():
-#         if s2 == '':
-#             s1 = insertCopyAt(line, s1)
-#         else:
-#             s2 = insertCopyAt(line, s2)
-#     else:
-#         if s1 == '':
-#             s1 = line
-#         else:
-#             s2 = line
-
 delta = 30
 alphas = [[0,110,48,94],[110, 0, 118, 48],[48, 118, 0, 110],[94, 48,110, 0]]
 
 # s1 and s2 indexes point to the index of the last letter in string
 def findMinCost():
-    # if (s1_index, s2_index) in memo:
-    #     return memo[(s1_index, s2_index)][0]
-    # if s1_index == -1:
-    #     return delta * (s2_index+1)
-    # elif s2_index == -1:
-    #     return delta * (s1_index+1)
 
     memo_array = [[0]*(len(s1)+1) for i in range((len(s2)+1))]
 
@@ -67,7 +45,6 @@ def findMinCost():
                 delta + memo_array[s2_index-1][s1_index], # add gap to s2
                 delta + memo_array[s2_index][s1_index-1]) # add gap to s1
 
-    #memo[(s1_index, s2_index)] = chosenMin
     return memo_array
 
 def chooseMin(first, second, third):
@@ -139,11 +116,6 @@ def calculate_final_string(memo_array):
             final_s1 = s1[s1_index-1] + final_s1
             s1_index -= 1
 
-    # if len(final_s1) > len(final_s2):
-    #     final_s1 = final_s1[:-1]
-    # else:
-    #     final_s2 = final_s2[:-1]
-
     return (final_s1, final_s2)
 
 
@@ -197,8 +169,6 @@ def call_algorithm():
                 f.writelines("\n")
 
 def main():
-    # a, b = findMinCost(s1,s2)
-    # print(b[len(s2)])
     time = time_wrapper()
     memory = process_memory()
     with open(outputFilename,"a") as f:
