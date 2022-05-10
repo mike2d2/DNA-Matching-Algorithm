@@ -12,7 +12,7 @@ sys.setrecursionlimit(10**8)
 #inputFile = open(inputFilename, 'r')
 #lines = inputFile.readlines()
 
-inputFilename = "datapoints/in14.txt"#sys.argv[1]
+inputFilename = "input.txt" #sys.argv[1]
 outputFilename = "output.txt" #sys.argv[2]
 
 s1 = ''
@@ -126,64 +126,77 @@ def calculate_final_string(memo_array, x, y):
 
     return (final_s1, final_s2)
 
+
+
 def find_min_cost_recursive(x, y):
     global output_string_1
     global output_string_2
-    if len(x) == 0 and len(y) == 0:
-        #return (x, y, 0)
-        output_string_1 += x
-        output_string_2 += y
-        return
-    elif len(x) == 1 and len(y) > 1:
-        x_str = ''
-        total_cost = 0
-        (min_match_cost, index) = find_min_match(x,y)
-        for i in range(len(y)):
-            if i == index:
-                x_str += x
-            else:
-                x_str = x_str + '_'
-                total_cost += delta
-        #return (x_str, y, total_cost + min_match_cost)
+
+    if len(x) <= 1 or len(y) <= 1:
+        #x_str, y_str = basic_alg(x,y)
+        basic = Basic('','')
+        x_str, y_str = basic.basic_alg(x, y)
         output_string_1 += x_str
-        output_string_2 += y
-        return
-    elif len(y) == 1 and len(x) > 1:
-        y_str = ''
-        total_cost = 0
-        (min_match_cost, index) = find_min_match(y,x)
-        for i in range(len(x)):
-            if i == index:
-                y_str += y
-            else:
-                y_str = y_str + '_'
-                total_cost += delta
-        #return (x, y_str, total_cost + min_match_cost)
-        output_string_1 += x
         output_string_2 += y_str
         return
-    elif len(x) == 1 and len(y) == 1:
-        cost = calculateMatchCost(x,y)
-        # return (x,y,cost)
-        output_string_1 += x
-        output_string_2 += y
-        return
-    elif len(x) == 0:
-        x_str = ''
-        for i in range(len(y)):
-            x_str = x_str + '_'
-        #return (x_str, y, (delta * len(y)))
-        output_string_1 += x_str
-        output_string_2 += y
-        return
-    elif len(y) == 0:
-        y_str = ''
-        for i in range(len(x)):
-            y_str = y_str + '_'
-        #return (x, y_str, (delta * len(x)))
-        output_string_1 += x
-        output_string_2 += y_str
-        return
+    
+
+
+    # if len(x) == 0 and len(y) == 0:
+    #     #return (x, y, 0)
+    #     output_string_1 += x
+    #     output_string_2 += y
+    #     return
+    # elif len(x) == 1 and len(y) > 1:
+    #     x_str = ''
+    #     total_cost = 0
+    #     (min_match_cost, index) = find_min_match(x,y)
+    #     for i in range(len(y)):
+    #         if i == index:
+    #             x_str += x
+    #         else:
+    #             x_str = x_str + '_'
+    #             total_cost += delta
+    #     #return (x_str, y, total_cost + min_match_cost)
+    #     output_string_1 += x_str
+    #     output_string_2 += y
+    #     return
+    # elif len(y) == 1 and len(x) > 1:
+    #     y_str = ''
+    #     total_cost = 0
+    #     (min_match_cost, index) = find_min_match(y,x)
+    #     for i in range(len(x)):
+    #         if i == index:
+    #             y_str += y
+    #         else:
+    #             y_str = y_str + '_'
+    #             total_cost += delta
+    #     #return (x, y_str, total_cost + min_match_cost)
+    #     output_string_1 += x
+    #     output_string_2 += y_str
+    #     return
+    # elif len(x) == 1 and len(y) == 1:
+    #     cost = calculateMatchCost(x,y)
+    #     # return (x,y,cost)
+    #     output_string_1 += x
+    #     output_string_2 += y
+    #     return
+    # elif len(x) == 0:
+    #     x_str = ''
+    #     for i in range(len(y)):
+    #         x_str = x_str + '_'
+    #     #return (x_str, y, (delta * len(y)))
+    #     output_string_1 += x_str
+    #     output_string_2 += y
+    #     return
+    # elif len(y) == 0:
+    #     y_str = ''
+    #     for i in range(len(x)):
+    #         y_str = y_str + '_'
+    #     #return (x, y_str, (delta * len(x)))
+    #     output_string_1 += x
+    #     output_string_2 += y_str
+    #     return
         
     
     x_l, x_r = x[:math.floor(len(x)/2)], x[math.floor(len(x)/2):]
@@ -213,12 +226,12 @@ def find_min_cost_recursive(x, y):
 def chooseMin(first, second, third):
     chosen = 0
     min = first
-    if third < min:
-        min = third
-        chosen = 2
     if second < min:
         min = second
         chosen = 1
+    if third < min:
+        min = third
+        chosen = 2
 
     return chosen
 
@@ -273,9 +286,9 @@ def time_wrapper():
 
 def call_algorithm():
     create_data()
-    l1, l2 = findMinCost(s1, s2)
-    cost = l1[len(l2)-1]
-    print(str(cost))
+    # l1, l2 = findMinCost(s1, s2)
+    # cost = l2[len(l2)-1]
+    # print(str(cost))
     find_min_cost_recursive(s1, s2)
     #print(output_string_1)
     #print(output_string_2)
@@ -331,8 +344,6 @@ def create_data():
 
 
 def main():
-    
-
     # a, b = findMinCost(s1,s2)
     # print(b[len(s2)])
     time = time_wrapper()
@@ -347,5 +358,132 @@ def main():
 
     #create_data()
 
+################################
+# THIS IS BASIC ALG CODE
+class Basic:
+    def __init__(self, basic_s1, basic_s2):
+        self.basic_s1 = basic_s1
+        self.basic_s2 = basic_s2
+
+    def basic_alg(self, x, y):
+        self.basic_s1 = x
+        self.basic_s2 = y
+        basic_memo_array = self.basic_findMinCost()
+        cost = basic_memo_array[len(self.basic_s2)][len(self.basic_s1)]
+        print(cost)
+        print("line368")
+
+        fs1, fs2 = self.basic_calculate_final_string(basic_memo_array)
+
+        return (fs1, fs2)
+
+    # s1 and s2 indexes point to the index of the last letter in string
+    def basic_findMinCost(self):
+        # if (s1_index, s2_index) in memo:
+        #     return memo[(s1_index, s2_index)][0]
+        # if s1_index == -1:
+        #     return delta * (s2_index+1)
+        # elif s2_index == -1:
+        #     return delta * (s1_index+1)
+
+        basic_memo_array = [[0]*(len(self.basic_s1)+1) for i in range((len(self.basic_s2)+1))]
+
+        #
+        for i in range(len(self.basic_s1)+1):
+            basic_memo_array[0][i] = delta * i
+
+        for i in range(len(self.basic_s2)+1):
+            basic_memo_array[i][0] = delta * i
+        
+        for s1_index in range(1,len(self.basic_s1)+1):
+            for s2_index in range(1, len(self.basic_s2)+1):
+                matchCost = self.basic_calculateMatchCost(s1_index, s2_index)
+                
+                basic_memo_array[s2_index][s1_index] = min(
+                    matchCost + basic_memo_array[s2_index-1][s1_index-1], # match
+                    delta + basic_memo_array[s2_index-1][s1_index], # add gap to s2
+                    delta + basic_memo_array[s2_index][s1_index-1]) # add gap to s1
+
+        #memo[(s1_index, s2_index)] = chosenMin
+        return basic_memo_array
+
+    def basic_chooseMin(self, first, second, third):
+        chosen = 0
+        min = first
+        if third < min:
+            min = third
+            chosen = 2
+        if second < min:
+            min = second
+            chosen = 1
+
+        return chosen
+
+    def basic_calculateMatchCost(self, i, j):
+        char1 = self.basic_s1[i-1]
+        char2 = self.basic_s2[j-1]
+
+        index1 = self.basic_convertLetterToAlpha(char1)
+        index2 = self.basic_convertLetterToAlpha(char2)
+
+        matchCost = alphas[index1][index2]
+        return matchCost
+
+    def basic_convertLetterToAlpha(self, letter):
+        if letter == 'A':
+            return 0
+        if letter == 'C':
+            return 1
+        if letter == 'G':
+            return 2
+        if letter == 'T':
+            return 3
+        else:
+            return -1
+
+    def basic_calculate_final_string(self, basic_memo_array):
+        s1_index = len(self.basic_s1)
+        s2_index = len(self.basic_s2)
+        final_s1 = ''
+        final_s2 = ''
+
+        while s1_index > 0 or s2_index > 0:
+            #opt = memo_array[s2_index][s2_index]
+            if s1_index == 0:
+                chose = 1
+            elif s2_index == 0:
+                chose = 2
+            else:
+                #chose = self.basic_chooseMin(basic_memo_array[s2_index-1][s1_index-1], basic_memo_array[s2_index-1][s1_index], basic_memo_array[s2_index][s1_index-1])
+                feasible_match = math.inf
+                matchCost = self.basic_calculateMatchCost(s1_index, s2_index)
+                totCost = basic_memo_array[s2_index-1][s1_index-1] + matchCost
+                if (totCost == basic_memo_array[s2_index][s1_index]):
+                    feasible_match = basic_memo_array[s2_index-1][s1_index-1]
+                chose = self.basic_chooseMin(feasible_match, basic_memo_array[s2_index-1][s1_index], basic_memo_array[s2_index][s1_index-1])
+
+            if chose == 0:
+                final_s1 = self.basic_s1[s1_index-1] + final_s1
+                final_s2 = self.basic_s2[s2_index-1] + final_s2
+
+                s1_index -= 1
+                s2_index -= 1
+            elif chose == 1:
+                final_s1 = '_' + final_s1
+                final_s2 = self.basic_s2[s2_index-1] + final_s2
+                s2_index -= 1
+            elif chose == 2:
+                final_s2 = '_' + final_s2
+                final_s1 = self.basic_s1[s1_index-1] + final_s1
+                s1_index -= 1
+
+        # if len(final_s1) > len(final_s2):
+        #     final_s1 = final_s1[:-1]
+        # else:
+        #     final_s2 = final_s2[:-1]
+
+        return (final_s1, final_s2)
+
 if __name__ == '__main__':
     main()
+    #basic_alg("ACTG", "A")

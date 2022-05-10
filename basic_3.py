@@ -6,8 +6,8 @@ import time
 import psutil
 
 sys.setrecursionlimit(10**6)
-inputFilename = sys.argv[1]
-outputFilename = sys.argv[2]
+inputFilename = "input.txt"#sys.argv[1]
+outputFilename = "output.txt"#sys.argv[2]
 
 inputFile = open(inputFilename, 'r')
 lines = inputFile.readlines()
@@ -117,7 +117,12 @@ def calculate_final_string(memo_array):
         elif s2_index == 0:
             chose = 2
         else:
-            chose = chooseMin(memo_array[s2_index-1][s1_index-1], memo_array[s2_index-1][s1_index], memo_array[s2_index][s1_index-1])
+            feasible_match = math.inf
+            matchCost = calculateMatchCost(s1_index, s2_index)
+            totCost = memo_array[s2_index-1][s1_index-1] + matchCost
+            if (totCost == memo_array[s2_index][s1_index]):
+                feasible_match = memo_array[s2_index-1][s1_index-1]
+            chose = chooseMin(feasible_match, memo_array[s2_index-1][s1_index], memo_array[s2_index][s1_index-1])
 
         if chose == 0:
             final_s1 = s1[s1_index-1] + final_s1
@@ -182,11 +187,8 @@ def call_algorithm():
     setup_data()
     memo_array = findMinCost()
     cost = memo_array[len(s2)][len(s1)]
-    print(cost)
 
     final_strings = calculate_final_string(memo_array)
-    print(final_strings[0])
-    print(final_strings[1])
 
     lines = [str(cost), final_strings[0], final_strings[1]]
     with open(outputFilename,"w") as f:
